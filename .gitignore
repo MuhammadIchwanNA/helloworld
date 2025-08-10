@@ -14,3 +14,10 @@ Not for showing off — just learning, building, and sharing along the way.
 ```bash
 npm install
 npm run dev
+
+# macOS
+.DS_Store
+
+# Node / Vite
+node_modules
+dist

@@ -1,7 +1,9 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+// vite.config.ts
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
 
-// https://vite.dev/config/
+// IMPORTANT: if your repo name is not "helloworld", change the base accordingly.
 export default defineConfig({
   plugins: [react()],
-})
+  base: "/helloworld/",
+});
