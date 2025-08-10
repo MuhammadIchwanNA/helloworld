@@ -1,67 +1,39 @@
-<!DOCTYPE html>
+<!-- index.html -->
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+
     <title>helloworld — essays & projects</title>
-    <meta
-      name="description"
-      content="Personal website — ideas, learning, projects, and more."
-    />
+    <meta name="description" content="Personal website — ideas, learning, projects, and more." />
 
     <!-- Inter font -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400&display=swap" rel="stylesheet" />
 
-    <!-- Favicons -->
-    <!-- index.html -->
-    <link
-      id="app-favicon"
-      rel="icon"
-      media="(prefers-color-scheme: light)"
-      href="/helloworld/favicon-light.png"
-      type="image/png"
-    />
-    <link
-      id="app-favicon"
-      rel="icon"
-      media="(prefers-color-scheme: dark)"
-      href="/helloworld/favicon-dark.png"
-      type="image/png"
-    />
+    <!-- Favicon (we'll swap this immediately based on theme) -->
+    <link id="app-favicon" rel="icon" type="image/png" href="/helloworld/favicon-light.png" />
 
-
-    <!-- index.html -->
-    <link
-      id="app-favicon"
-      rel="icon"
-      type="image/png"
-      href="/helloworld/favicon-light.png"
-    />
+    <!-- Set initial theme + favicon before React mounts (no flash) -->
     <script>
       (function () {
-        const isStoredDark = localStorage.getItem("theme") === "dark";
-        const isSystemDark = matchMedia("(prefers-color-scheme: dark)").matches;
-        const dark =
-          isStoredDark || (!localStorage.getItem("theme") && isSystemDark);
-        document.documentElement.classList.toggle("theme-dark", dark);
-        const link = document.getElementById("app-favicon");
-        if (link)
-          link.href =
-            (document.currentScript.src.includes("/helloworld/")
-              ? "/helloworld/"
-              : "/") + (dark ? "favicon-dark.png" : "favicon-light.png");
+        try {
+          const stored = localStorage.getItem("theme");
+          const systemDark = window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches;
+          const dark = stored ? stored === "dark" : systemDark;
+          document.documentElement.classList.toggle("theme-dark", dark);
+
+          const link = document.getElementById("app-favicon");
+          if (link) link.href = dark ? "/favicon-dark.png" : "/favicon-light.png";
+        } catch (_) {}
       })();
     </script>
-    <script type="module" crossorigin src="/helloworld/assets/index-CI5Cb3SX.js"></script>
-    <link rel="stylesheet" crossorigin href="/helloworld/assets/index-CLXUCAah.css">
+    <script type="module" crossorigin src="/helloworld/assets/index-XIivsAka.js"></script>
+    <link rel="stylesheet" crossorigin href="/helloworld/assets/index-DKWcm6m8.css">
   </head>
   <body>
     <div id="root"></div>
-    <!-- ✅ correct path for Vite to rewrite at build time -->
   </body>
 </html>
