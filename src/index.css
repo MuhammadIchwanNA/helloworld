@@ -1,3 +1,4 @@
+/* src/index.css */
 /* ========== Reset & Base ========== */
 * { box-sizing: border-box; }
 html, body, #root { margin: 0; padding: 0; height: 100%; }
@@ -139,7 +140,6 @@ footer{ text-align:center; padding: 14px 0; color: var(--muted); font-size: 12px
 }
 
 /* ========== Buttons ========== */
-/* Simple, flat buttons with subtle hover */
 .btn{
   background: var(--panel);
   color: var(--text);
@@ -151,3 +151,135 @@ footer{ text-align:center; padding: 14px 0; color: var(--muted); font-size: 12px
 }
 .btn:hover{ opacity: .9; }
 .btn:disabled{ opacity: .6; cursor: not-allowed; }
+
+/* ========== Photo Grid ========== */
+.photo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 10px;
+  margin-top: 8px;
+}
+.photo-grid img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+.photo-grid img:hover {
+  transform: scale(1.02);
+}
+
+/* ----------------------------
+   Photo Lightbox Styles
+---------------------------- */
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease-in-out;
+  cursor: zoom-out;
+}
+
+.lightbox img {
+  max-width: 90vw;
+  max-height: 90vh;
+  object-fit: contain;
+  border-radius: 6px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  display: block;
+}
+
+/* Optional fade-in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: grid;
+  place-items: center;
+  z-index: 9999;
+}
+
+.modal {
+  background: var(--panel);
+  padding: 20px;
+  border-radius: 12px;
+  max-width: 360px;
+  width: 90%;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  position: relative;
+  animation: fadeIn 0.25s ease-out;
+}
+
+/* Modal close button */
+.modal-close {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: var(--muted);
+  cursor: pointer;
+}
+/* Modal fade-in animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: grid;
+  place-items: center;
+  z-index: 9999;
+}
+
+.modal {
+  background: var(--panel);
+  padding: 20px;
+  border-radius: 12px;
+  max-width: 360px;
+  width: 90%;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  position: relative;
+  animation: fadeIn 0.25s ease-out;
+}
+/* Modal close button */
+.modal-close {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+
+

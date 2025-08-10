@@ -1,6 +1,21 @@
 import { useEffect, useState } from "react";
 import ConnectWallet from "./components/ConnectWallet";
+import Modal from "./components/modal";
 import "./index.css";
+import iconLight from "./assets/icon-light.png";
+import iconDark from "./assets/icon-dark.png";
+
+// Preload all photos from /public/photos/
+const photoEntries = Object.entries(
+  import.meta.glob("/public/photos/*.{jpg,jpeg,png}", {
+    as: "url",
+    eager: true,
+  })
+);
+
+const photoUrls = photoEntries
+  .map(([_, url]) => url)
+  .sort((a, b) => (a > b ? 1 : -1));
 
 type Project = { title: string; blurb: string; href?: string; tag?: string };
 
@@ -18,53 +33,42 @@ const projects: Project[] = [
     tag: "typescript",
   },
   {
-    title: "Soup Servings (DP+Memo)",
+    title: "Soup Servings (DP + Memo)",
     blurb: "LeetCode DP solution with Map memo + explanation.",
     tag: "algorithms",
   },
 ];
 
 export default function App() {
-  // ---------- Theme toggle (uses html.theme-dark) ----------
-  const [isDark, setIsDark] = useState<boolean>(() => {
-    const stored = localStorage.getItem("theme");
-    if (stored) return stored === "dark";
-    return false;
-  });
+  const [isDark, setIsDark] = useState(
+    () => localStorage.getItem("theme") === "dark"
+  );
+  const [modalOpen, setModalOpen] = useState(false);
+  const [lightboxUrl, setLightboxUrl] = useState<string | null>(null);
+
+  const closeLightbox = () => setLightboxUrl(null);
 
   useEffect(() => {
     document.documentElement.classList.toggle("theme-dark", isDark);
     localStorage.setItem("theme", isDark ? "dark" : "light");
+
+    const link = document.querySelector<HTMLLinkElement>("#app-favicon");
+    if (link) {
+      const next = isDark ? "/favicon-dark.png" : "/favicon-light.png";
+      if (!link.href.endsWith(next)) link.href = next;
+    }
   }, [isDark]);
 
-  // ---------- Scroll reveal with gentle stagger ----------
+  useEffect(() => {
+    const close = (e: KeyboardEvent) =>
+      e.key === "Escape" && setModalOpen(false);
+    window.addEventListener("keydown", close);
+    return () => window.removeEventListener("keydown", close);
+  }, []);
+
   useEffect(() => {
     const els = Array.from(document.querySelectorAll<HTMLElement>(".reveal"));
     els.forEach((el, i) => (el.dataset.idx = String(i % 5)));
-
-    useEffect(() => {
-      const base = import.meta.env.BASE_URL || "/";
-      const href = `${base}${
-        isDark ? "favicon-dark.svg" : "favicon-light.svg"
-      }`;
-
-      // find existing managed favicon or create one
-      let link = document.querySelector<HTMLLinkElement>(
-        'link#app-favicon[rel="icon"]'
-      );
-      if (!link) {
-        link = document.createElement("link");
-        link.id = "app-favicon";
-        link.rel = "icon";
-        link.type = "image/svg+xml";
-        document.head.appendChild(link);
-      }
-      link.href = href;
-
-      // also bust cache so some browsers refresh immediately
-      // (uncomment if you notice caching)
-      // link.href = `${href}?v=${isDark ? "dark" : "light"}`;
-    }, [isDark]);
 
     const io = new IntersectionObserver(
       (entries) => {
@@ -72,7 +76,7 @@ export default function App() {
           if (!entry.isIntersecting) return;
           const el = entry.target as HTMLElement;
           const idx = Number(el.dataset.idx || 0);
-          el.style.transitionDelay = `${idx * 80}ms`; // 0,80,160,240,320
+          el.style.transitionDelay = `${idx * 80}ms`;
           el.classList.add("show");
           io.unobserve(el);
         });
@@ -84,13 +88,19 @@ export default function App() {
     return () => io.disconnect();
   }, []);
 
+  // Lightbox keyboard close
+  useEffect(() => {
+    const close = (e: KeyboardEvent) =>
+      e.key === "Escape" && setLightboxUrl(null);
+    window.addEventListener("keydown", close);
+    return () => window.removeEventListener("keydown", close);
+  }, []);
+
   return (
     <>
-      {/* Fixed header */}
       <header className="header">
         <div className="header-inner container">
           <h1 className="site-title">helloworld</h1>
-
           <div className="header-right">
             <nav className="nav">
               <a href="#essays">Essays</a>
@@ -100,16 +110,17 @@ export default function App() {
               <a href="#web3">Web3</a>
             </nav>
 
+            <button className="btn" onClick={() => setModalOpen(true)}>
+              Wallet
+            </button>
             <button
-              className="toggle-btn"
+              className="btn"
               aria-label="Toggle theme"
               onClick={() => setIsDark((v) => !v)}
               title={isDark ? "Switch to light" : "Switch to dark"}
             >
               <img
-                src={`${import.meta.env.BASE_URL}${
-                  isDark ? "icon-dark.svg" : "icon-light.svg"
-                }`}
+                src={isDark ? iconDark : iconLight}
                 alt=""
                 width={16}
                 height={16}
@@ -120,7 +131,6 @@ export default function App() {
         </div>
       </header>
 
-      {/* Hero (immediate slow fade) */}
       <section id="hero" className="hero fade-in">
         <div className="container" style={{ textAlign: "center" }}>
           <h2>helloworld</h2>
@@ -128,24 +138,14 @@ export default function App() {
             a small corner on the internet — essays, projects, and experiments.
             built to grow slowly and stay honest.
           </p>
-          <div className="hero-actions">
-            <a href="#projects" className="quiet-link">
-              see projects
-            </a>
-            <span className="sep">·</span>
-            <a href="#essays" className="quiet-link">
-              read essays
-            </a>
-          </div>
         </div>
       </section>
 
-      {/* Main content */}
       <main className="container main">
         <section id="essays" className="reveal">
           <h3>Essays</h3>
           <p>
-            <i>(Coming soon: list of essays)</i>
+            <i>(Coming soon)</i>
           </p>
         </section>
 
@@ -197,29 +197,48 @@ export default function App() {
 
         <section id="photos" className="reveal">
           <h3>Photo Journal</h3>
-          <p>
-            <i>(Coming soon: photo grid)</i>
-          </p>
+          <div className="photo-grid">
+            {photoUrls.map((url, i) => (
+              <img
+                key={i}
+                src={url}
+                alt={`Photo ${i}`}
+                loading="lazy"
+                onClick={() => setLightboxUrl(url)}
+              />
+            ))}
+          </div>
+          {lightboxUrl && (
+            <div className="lightbox" onClick={closeLightbox}>
+              <img src={lightboxUrl} alt="Zoomed" />
+            </div>
+          )}
         </section>
 
         <section id="memes" className="reveal">
           <h3>Meme Vault</h3>
           <p>
-            <i>(Coming soon: image gallery)</i>
+            <i>(Coming soon)</i>
           </p>
         </section>
 
         <section id="web3" className="reveal">
           <h3>Web3 Playground</h3>
-          <div className="card">
-            <ConnectWallet />
-          </div>
+          <p>
+            <i>Wallet opens in top-right modal →</i>
+          </p>
         </section>
 
         <footer>
           <small>© {new Date().getFullYear()} helloworld</small>
         </footer>
       </main>
+
+      {modalOpen && (
+        <Modal onClose={() => setModalOpen(false)}>
+          <ConnectWallet />
+        </Modal>
+      )}
     </>
   );
 }
