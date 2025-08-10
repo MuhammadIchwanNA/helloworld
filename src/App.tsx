@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import ConnectWallet from "./components/ConnectWallet";
-import Modal from "./components/modal";
+import Modal from "./components/Modal";
 import "./index.css";
 import iconLight from "./assets/icon-light.png";
 import iconDark from "./assets/icon-dark.png";
