@@ -42,6 +42,30 @@ export default function App() {
     const els = Array.from(document.querySelectorAll<HTMLElement>(".reveal"));
     els.forEach((el, i) => (el.dataset.idx = String(i % 5)));
 
+    useEffect(() => {
+      const base = import.meta.env.BASE_URL || "/";
+      const href = `${base}${
+        isDark ? "favicon-dark.svg" : "favicon-light.svg"
+      }`;
+
+      // find existing managed favicon or create one
+      let link = document.querySelector<HTMLLinkElement>(
+        'link#app-favicon[rel="icon"]'
+      );
+      if (!link) {
+        link = document.createElement("link");
+        link.id = "app-favicon";
+        link.rel = "icon";
+        link.type = "image/svg+xml";
+        document.head.appendChild(link);
+      }
+      link.href = href;
+
+      // also bust cache so some browsers refresh immediately
+      // (uncomment if you notice caching)
+      // link.href = `${href}?v=${isDark ? "dark" : "light"}`;
+    }, [isDark]);
+
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
