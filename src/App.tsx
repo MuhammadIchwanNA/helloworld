@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import ConnectWallet from "./components/ConnectWallet";
+import iconLight from "./assets/icon-light.png";
+import iconDark from "./assets/icon-dark.png";
 import "./index.css";
 
 type Project = { title: string; blurb: string; href?: string; tag?: string };
@@ -13,7 +15,8 @@ const projects: Project[] = [
   },
   {
     title: "Daily Exercises",
-    blurb: "TypeScript practice from bootcamp: algorithms, DS, and utilities.",
+    blurb:
+      "TypeScript practice from bootcamp: algorithms, DS, and utilities.",
     href: "https://github.com/your-username/programming101/tree/main/dailyExercise",
     tag: "typescript",
   },
@@ -25,7 +28,7 @@ const projects: Project[] = [
 ];
 
 export default function App() {
-  /* ---------- Theme toggle (uses html.theme-dark) ---------- */
+  // ---------- Theme toggle (uses html.theme-dark) ----------
   const [isDark, setIsDark] = useState<boolean>(() => {
     const stored = localStorage.getItem("theme");
     if (stored) return stored === "dark";
@@ -37,7 +40,7 @@ export default function App() {
     localStorage.setItem("theme", isDark ? "dark" : "light");
   }, [isDark]);
 
-  /* ---------- Scroll reveal with gentle stagger ---------- */
+  // ---------- Scroll reveal with gentle stagger ----------
   useEffect(() => {
     const els = Array.from(document.querySelectorAll<HTMLElement>(".reveal"));
     els.forEach((el, i) => (el.dataset.idx = String(i % 5)));
@@ -76,7 +79,6 @@ export default function App() {
               <a href="#web3">Web3</a>
             </nav>
 
-            {/* Image-based toggle; put icon-light.png & icon-dark.png in /public */}
             <button
               className="toggle-btn"
               aria-label="Toggle theme"
@@ -84,7 +86,7 @@ export default function App() {
               title={isDark ? "Switch to light" : "Switch to dark"}
             >
               <img
-                src={isDark ? "/icon-dark.png" : "/icon-light.png"}
+                src={isDark ? iconDark : iconLight}
                 alt=""
                 width={16}
                 height={16}
@@ -104,13 +106,9 @@ export default function App() {
             built to grow slowly and stay honest.
           </p>
           <div className="hero-actions">
-            <a href="#projects" className="quiet-link">
-              see projects
-            </a>
+            <a href="#projects" className="quiet-link">see projects</a>
             <span className="sep">·</span>
-            <a href="#essays" className="quiet-link">
-              read essays
-            </a>
+            <a href="#essays" className="quiet-link">read essays</a>
           </div>
         </div>
       </section>
@@ -119,47 +117,19 @@ export default function App() {
       <main className="container main">
         <section id="essays" className="reveal">
           <h3>Essays</h3>
-          <p>
-            <i>(Coming soon: list of essays)</i>
-          </p>
+          <p><i>(Coming soon: list of essays)</i></p>
         </section>
 
         <section id="projects" className="reveal">
           <h3>Projects</h3>
           <div style={{ display: "grid", gap: 10 }}>
             {projects.map((p) => (
-              <article
-                key={p.title}
-                className="card"
-                style={{ textAlign: "left" }}
-              >
-                <div style={{ fontSize: 12, opacity: 0.7 }}>
-                  {p.tag ?? "project"}
-                </div>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "baseline",
-                    gap: 8,
-                  }}
-                >
-                  <h4
-                    style={{
-                      margin: "2px 0 6px",
-                      fontSize: 13.5,
-                      fontWeight: 400,
-                    }}
-                  >
-                    {p.title}
-                  </h4>
+              <article key={p.title} className="card" style={{ textAlign: "left" }}>
+                <div style={{ fontSize: 12, opacity: 0.7 }}>{p.tag ?? "project"}</div>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 8 }}>
+                  <h4 style={{ margin: "2px 0 6px", fontSize: 13.5, fontWeight: 400 }}>{p.title}</h4>
                   {p.href && (
-                    <a
-                      className="quiet-link"
-                      href={p.href}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
+                    <a className="quiet-link" href={p.href} target="_blank" rel="noreferrer">
                       open ↗
                     </a>
                   )}
@@ -172,16 +142,12 @@ export default function App() {
 
         <section id="photos" className="reveal">
           <h3>Photo Journal</h3>
-          <p>
-            <i>(Coming soon: photo grid)</i>
-          </p>
+          <p><i>(Coming soon: photo grid)</i></p>
         </section>
 
         <section id="memes" className="reveal">
           <h3>Meme Vault</h3>
-          <p>
-            <i>(Coming soon: image gallery)</i>
-          </p>
+          <p><i>(Coming soon: image gallery)</i></p>
         </section>
 
         <section id="web3" className="reveal">
