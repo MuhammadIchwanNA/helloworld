@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import ConnectWallet from "./components/ConnectWallet";
 import "./index.css";
 
-
 type Project = { title: string; blurb: string; href?: string; tag?: string };
 
 const projects: Project[] = [
